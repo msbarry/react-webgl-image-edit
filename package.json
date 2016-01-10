@@ -13,7 +13,7 @@
     "preserve:prod": "npm run build",
     "serve:prod": "NODE_ENV=production node scripts/serve.js",
     "serve:dev": "NODE_ENV=development node scripts/serve.js",
-    "prebuild": "npm run clean -s && npm run lint -s && npm test -s",
+    "prebuild": "npm run clean -s && npm run lint -s",
     "build": "NODE_ENV=production webpack --config webpack.config.js --progress --colors -p"
   },
   "author": "",
@@ -45,6 +45,7 @@
     "postcss-import": "^7.1.3",
     "postcss-loader": "^0.8.0",
     "postcss-reporter": "^1.3.0",
+    "raw-loader": "^0.5.1",
     "react": "^0.14.5",
     "react-addons-test-utils": "^0.14.6",
     "react-dom": "^0.14.5",
