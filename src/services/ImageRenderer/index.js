@@ -55,6 +55,8 @@ export default class ImageRenderer {
       const positionLocation = gl.getAttribLocation(program, 'a_position');
       const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
       this.setResolution = (width, height) => gl.uniform2f(resolutionLocation, width, height);
+      const darkerLocation = gl.getUniformLocation(program, 'u_darker');
+      this.setDarker = (darker) => gl.uniform1f(darkerLocation, darker);
 
       // create buffers and upload vertex data
       const texCoordLocation = gl.getAttribLocation(program, 'a_texCoord');
@@ -92,7 +94,11 @@ export default class ImageRenderer {
     }
   }
 
-  render({ width, height }) {
+  render({
+    width,
+    height,
+    darker = 0
+  }) {
     const gl = this._gl;
     this.canvas.width = width;
     this.canvas.height = height;
@@ -103,6 +109,7 @@ export default class ImageRenderer {
     gl.viewport(0, 0, width, height);
     // setup uniforms for the thing you want to draw
     this.setResolution(width, height);
+    this.setDarker(darker);
     // call gl.uniformXXX for each uniform
     // call gl.activeTexture and gl.bindTexture to assign textures to texture units.
     setRectangle(gl, 0, 0, width, height);

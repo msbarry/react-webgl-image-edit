@@ -39,8 +39,9 @@ export default class ModifiedImage extends Component {
 
     if (image) {
       const sourceCanvas = image.render({
-        width: canvas.width,
-        height: canvas.height
+        width: canvasWidth,
+        height: canvasHeight,
+        darker: this.props.darker
       });
       destContext.drawImage(sourceCanvas, 0, 0);
     }

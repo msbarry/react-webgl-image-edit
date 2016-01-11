@@ -20,17 +20,18 @@ class App extends Component {
   }
 
   render() {
+    const images = [];
+    for (let i = 0; i < 1.0; i = i + 0.1) {
+      images.push(<ModifiedImage
+        maxWidth={100}
+        image={this.state.image}
+        darker={i}
+        key={i}
+      />);
+    }
     return (
       <div className={style.normal}>
-        <ModifiedImage maxWidth={400} image={this.state.image}/>
-        <ModifiedImage maxWidth={400} image={this.state.image}/>
-        <ModifiedImage maxWidth={400} image={this.state.image}/>
-        <ModifiedImage maxWidth={400} image={this.state.image}/>
-        <ModifiedImage maxWidth={400} image={this.state.image}/>
-        <ModifiedImage maxWidth={400} image={this.state.image}/>
-        <ModifiedImage maxWidth={400} image={this.state.image}/>
-        <ModifiedImage maxWidth={400} image={this.state.image}/>
-        <ModifiedImage maxWidth={400} image={this.state.image}/>
+        {images}
       </div>
     );
   }
