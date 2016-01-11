@@ -1,1 +1,1 @@
-My boilerplate for react projects.
+Image manipulation in the browser using react and webgl.

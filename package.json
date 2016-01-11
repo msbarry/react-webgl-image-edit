@@ -1,7 +1,7 @@
 {
-  "name": "my-react-boilerplate",
+  "name": "react-webgl-image-edit",
   "version": "1.0.0",
-  "description": "My react boilerplate",
+  "description": "Image manipulation in the browser using react and webgl",
   "private": true,
   "scripts": {
     "clean": "rimraf dist",
@@ -17,7 +17,6 @@
     "build": "NODE_ENV=production webpack --config webpack.config.js --progress --colors -p"
   },
   "author": "",
-  "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^6.2.3",
     "babel-core": "^6.3.26",
