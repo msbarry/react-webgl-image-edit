@@ -43,10 +43,26 @@ function setRectangle(gl, x, y, width, height) {
 
 class Webgl extends Component {
   componentDidMount() {
-    const { canvas } = this.refs;
+    const { canvas, copyCanvas } = this.refs;
     try {
       const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      this.destContext = copyCanvas.getContext('2d');
       this._gl = gl;
+      const program = shaderProgram(gl, vertexShader, fragmentShader);
+      gl.useProgram(program);
+      const positionLocation = gl.getAttribLocation(program, 'a_position');
+      const texCoordLocation = gl.getAttribLocation(program, 'a_texCoord');
+      const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
+      this.setPosition = () => {
+        gl.enableVertexAttribArray(positionLocation);
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+      };
+      this.setTexCoord = () => {
+        gl.enableVertexAttribArray(texCoordLocation);
+        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+      };
+      this.setResolution = (width, height) => gl.uniform2f(resolutionLocation, width, height);
+      this.componentDidUpdate({});
     } catch (e) {
       console.error(e);
     }
@@ -71,12 +87,8 @@ class Webgl extends Component {
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       return;
     }
-    const program = shaderProgram(gl, vertexShader, fragmentShader);
-    gl.useProgram(program);
 
     // look up where the vertex data needs to go.
-    const positionLocation = gl.getAttribLocation(program, 'a_position');
-    const texCoordLocation = gl.getAttribLocation(program, 'a_texCoord');
 
     // provide texture coordinates for the rectangle.
     const texCoordBuffer = gl.createBuffer();
@@ -88,39 +100,39 @@ class Webgl extends Component {
       0.0, 1.0,
       1.0, 0.0,
       1.0, 1.0]), gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(texCoordLocation);
-    gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+    this.setTexCoord();
 
     // Create a texture.
-    const texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, texture);
+    if (image !== prevProps.image) {
+      const texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, texture);
 
-    // Set the parameters so we can render any size image.
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      // Set the parameters so we can render any size image.
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
-    // Upload the image into the texture.
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+      // Upload the image into the texture.
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    }
 
     // lookup uniforms
-    const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
 
     // set the resolution
-    gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+    this.setResolution(canvas.width, canvas.height);
 
     // Create a buffer for the position of the rectangle corners.
     const buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.enableVertexAttribArray(positionLocation);
-    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+    this.setPosition();
 
     // Set a rectangle the same size as the image.
     setRectangle(gl, 0, 0, canvas.width, canvas.height);
 
     // Draw the rectangle.
     gl.drawArrays(gl.TRIANGLES, 0, 6);
+    this.destContext.drawImage(canvas, 0, 0);
   }
 
   render() {
@@ -134,16 +146,29 @@ class Webgl extends Component {
     }
 
     return (
-      <canvas
-        width={width * pixelRatio}
-        height={height * pixelRatio}
-        ref="canvas"
-        style={{
-          width,
-          height,
-          border: '1px solid red'
-        }}
-      />
+      <div>
+        <canvas
+          width={width * pixelRatio}
+          height={height * pixelRatio}
+          ref="canvas"
+          style={{
+            width,
+            height,
+            border: '1px solid red',
+            display: 'none'
+          }}
+        />
+        <canvas
+          width={width * pixelRatio}
+          height={height * pixelRatio}
+          ref="copyCanvas"
+          style={{
+            width,
+            height,
+            border: '1px solid red'
+          }}
+        />
+      </div>
     );
   }
 }

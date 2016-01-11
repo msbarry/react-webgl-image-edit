@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import Webgl from '~/src/components/Webgl';
 import style from './style.css';
 import example from '~/src/static/example.jpg';
-import leaves from '~/src/static/leaves.jpg';
 
 class App extends Component {
   constructor(props) {
