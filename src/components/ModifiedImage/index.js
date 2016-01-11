@@ -49,18 +49,15 @@ export default class ModifiedImage extends Component {
   render() {
     const { width, height, canvasWidth, canvasHeight } = this.getDimensions();
     return (
-      <div>
-        <canvas
-          width={canvasWidth}
-          height={canvasHeight}
-          ref="canvas"
-          style={{
-            width,
-            height,
-            border: '1px solid red'
-          }}
-        />
-      </div>
+      <canvas
+        width={canvasWidth}
+        height={canvasHeight}
+        ref="canvas"
+        style={{
+          width,
+          height
+        }}
+      />
     );
   }
 }

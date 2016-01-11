@@ -23,6 +23,14 @@ class App extends Component {
     return (
       <div className={style.normal}>
         <ModifiedImage maxWidth={400} image={this.state.image}/>
+        <ModifiedImage maxWidth={400} image={this.state.image}/>
+        <ModifiedImage maxWidth={400} image={this.state.image}/>
+        <ModifiedImage maxWidth={400} image={this.state.image}/>
+        <ModifiedImage maxWidth={400} image={this.state.image}/>
+        <ModifiedImage maxWidth={400} image={this.state.image}/>
+        <ModifiedImage maxWidth={400} image={this.state.image}/>
+        <ModifiedImage maxWidth={400} image={this.state.image}/>
+        <ModifiedImage maxWidth={400} image={this.state.image}/>
       </div>
     );
   }
