@@ -2,7 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import ImageRenderer from '~/src/services/ImageRenderer';
 
-const pixelRatio = window.devicePixelRatio || 1;
+const pixelRatio = (window.devicePixelRatio || 1) * 2;
 
 export default class ModifiedImage extends Component {
   componentDidMount() {
@@ -38,22 +38,34 @@ export default class ModifiedImage extends Component {
     destContext.clearRect(0, 0, canvasWidth, canvasHeight);
 
     if (image) {
-      const sourceCanvas = image.render({
+      const props = Object.assign({}, this.props, {
         width: canvasWidth,
-        height: canvasHeight,
-        darker: this.props.darker
+        height: canvasHeight
       });
+      const sourceCanvas = image.renderToCanvas(props);
       destContext.drawImage(sourceCanvas, 0, 0);
     }
   }
 
   render() {
     const { width, height, canvasWidth, canvasHeight } = this.getDimensions();
+    const { image } = this.props;
+    const download = () => {
+      const clippedHeight = Math.min(1080, image.height);
+      const props = Object.assign({}, this.props, {
+        width: image.width * clippedHeight / image.height,
+        height: clippedHeight
+      });
+      const sourceCanvas = image.renderToCanvas(props);
+      window.open(sourceCanvas.toDataURL());
+    };
+    throw new Error('');
     return (
       <canvas
         width={canvasWidth}
         height={canvasHeight}
         ref="canvas"
+        onClick={download}
         style={{
           width,
           height
@@ -65,5 +77,7 @@ export default class ModifiedImage extends Component {
 
 ModifiedImage.PropTypes = {
   maxWidth: PropTypes.number,
-  image: PropTypes.instanceOf(ImageRenderer)
+  image: PropTypes.instanceOf(ImageRenderer),
+  darker: PropTypes.number,
+  lighter: PropTypes.number
 };

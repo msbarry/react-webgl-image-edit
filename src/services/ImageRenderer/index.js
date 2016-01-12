@@ -53,10 +53,14 @@ export default class ImageRenderer {
       const program = shaderProgram(gl, vertexShader, fragmentShader);
       gl.useProgram(program);
       const positionLocation = gl.getAttribLocation(program, 'a_position');
-      const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
-      this.setResolution = (width, height) => gl.uniform2f(resolutionLocation, width, height);
-      const darkerLocation = gl.getUniformLocation(program, 'u_darker');
-      this.setDarker = (darker) => gl.uniform1f(darkerLocation, darker);
+      this.setUniform1f = (name, a) => {
+        const location = gl.getUniformLocation(program, name);
+        gl.uniform1f(location, a);
+      };
+      this.setUniform2f = (name, a, b) => {
+        const location = gl.getUniformLocation(program, name);
+        gl.uniform2f(location, a, b);
+      };
 
       // create buffers and upload vertex data
       const texCoordLocation = gl.getAttribLocation(program, 'a_texCoord');
@@ -94,10 +98,12 @@ export default class ImageRenderer {
     }
   }
 
-  render({
+  renderToCanvas({
     width,
     height,
-    darker = 0
+    darker = 0,
+    lighter = 0,
+    contrast = 0
   }) {
     const gl = this._gl;
     this.canvas.width = width;
@@ -108,8 +114,10 @@ export default class ImageRenderer {
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.viewport(0, 0, width, height);
     // setup uniforms for the thing you want to draw
-    this.setResolution(width, height);
-    this.setDarker(darker);
+    this.setUniform2f('u_resolution', width, height);
+    this.setUniform1f('u_darker', darker);
+    this.setUniform1f('u_lighter', lighter);
+    this.setUniform1f('u_contrast', contrast + 1);
     // call gl.uniformXXX for each uniform
     // call gl.activeTexture and gl.bindTexture to assign textures to texture units.
     setRectangle(gl, 0, 0, width, height);

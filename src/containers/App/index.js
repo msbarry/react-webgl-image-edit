@@ -20,21 +20,45 @@ class App extends Component {
   }
 
   render() {
-    const images = [];
-    for (let i = 0; i < 1.0; i = i + 0.1) {
-      images.push(<ModifiedImage
-        maxWidth={100}
-        image={this.state.image}
-        darker={i}
-        key={i}
-      />);
-    }
     return (
       <div className={style.normal}>
-        {images}
+        <ModifiedImage
+          maxWidth={200}
+          image={this.state.image}
+        />
+        <ModifiedImage
+          maxWidth={200}
+          image={this.state.image}
+          darker={0.5}
+        />
+        <ModifiedImage
+          maxWidth={200}
+          image={this.state.image}
+          contrast={-0.25}
+        />
+        <ModifiedImage
+          maxWidth={200}
+          image={this.state.image}
+          contrast={0}
+        />
+        <ModifiedImage
+          maxWidth={200}
+          image={this.state.image}
+          contrast={0.9}
+        />
       </div>
     );
   }
+}
+
+if (module.hot) {
+  App.prototype.willHotReload = function willHotReload() {
+    if (this.state.image) {
+      this.setState({
+        image: new ImageRenderer(this.state.image.image)
+      });
+    }
+  };
 }
 
 export default App;
