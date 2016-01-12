@@ -23,28 +23,13 @@ class App extends Component {
     return (
       <div className={style.normal}>
         <ModifiedImage
-          maxWidth={200}
+          maxWidth={400}
           image={this.state.image}
         />
         <ModifiedImage
-          maxWidth={200}
+          maxWidth={400}
           image={this.state.image}
-          darker={0.5}
-        />
-        <ModifiedImage
-          maxWidth={200}
-          image={this.state.image}
-          contrast={-0.25}
-        />
-        <ModifiedImage
-          maxWidth={200}
-          image={this.state.image}
-          contrast={0}
-        />
-        <ModifiedImage
-          maxWidth={200}
-          image={this.state.image}
-          contrast={0.9}
+          value={-0.1}
         />
       </div>
     );

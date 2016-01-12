@@ -101,9 +101,13 @@ export default class ImageRenderer {
   renderToCanvas({
     width,
     height,
-    darker = 0,
-    lighter = 0,
-    contrast = 0
+    hue = 0,
+    saturation = 0,
+    value = 0,
+    contrast = 0,
+    red = 0,
+    green = 0,
+    blue = 0
   }) {
     const gl = this._gl;
     this.canvas.width = width;
@@ -115,9 +119,13 @@ export default class ImageRenderer {
     gl.viewport(0, 0, width, height);
     // setup uniforms for the thing you want to draw
     this.setUniform2f('u_resolution', width, height);
-    this.setUniform1f('u_darker', darker);
-    this.setUniform1f('u_lighter', lighter);
-    this.setUniform1f('u_contrast', contrast + 1);
+    this.setUniform1f('u_hue', hue);
+    this.setUniform1f('u_saturation', saturation);
+    this.setUniform1f('u_value', value);
+    this.setUniform1f('u_red', red);
+    this.setUniform1f('u_green', green);
+    this.setUniform1f('u_blue', blue);
+    this.setUniform1f('u_contrast', contrast);
     // call gl.uniformXXX for each uniform
     // call gl.activeTexture and gl.bindTexture to assign textures to texture units.
     setRectangle(gl, 0, 0, width, height);
