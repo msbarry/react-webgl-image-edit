@@ -59,7 +59,6 @@ export default class ModifiedImage extends Component {
       const sourceCanvas = image.renderToCanvas(props);
       window.open(sourceCanvas.toDataURL());
     };
-    throw new Error('');
     return (
       <canvas
         width={canvasWidth}
